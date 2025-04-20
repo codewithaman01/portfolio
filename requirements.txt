@@ -8,7 +8,6 @@ asgiref==3.8.1
 asn1crypto==1.5.1
 async-timeout==5.0.1
 attrs==25.3.0
-backports.zoneinfo==0.2.1
 billiard==4.2.1
 Brotli==1.1.0
 celery==5.5.1

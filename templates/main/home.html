@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'main/styles.css' %}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Aman Raj's Portfolio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    header {
+      background-color: #191717ca;
+      color: white;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    header img {
+      display: block;
+      margin: 0 auto;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    section {
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    footer {
+      margin-top: 20px;
+      padding: 10px 0;
+      background-color: #f1f1f1;
+      border-top: 1px solid #ddd;
+    }
+    .top-menu {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .dots {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+    .dots span {
+      height: 6px;
+      width: 16px;
+      background-color: #102f92;
+      border-radius: 50%;
+      margin: 3px auto;
+    }
+    .dropdown-menu {
+      position: relative;
+      top: 35px;
+      right: 0;
+      width: 150px;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transform: translateX(150%);
+      transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .dropdown-menu.show {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 20px;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .dropdown-menu a:hover {
+      background-color: #f1f1f1;
+    }
+    .contact-info {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+#introSection {
+  background-image: url("{% static 'image/background.png' %}");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 80px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Optional: Dark overlay to improve text contrast */
+#introSection::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+#introSection h6 {
+  position: relative;
+  z-index: 2;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+#introSection p.lead {
+  position: relative;
+  z-index: 2;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #f0f0f0; /* light grey-white for better contrast */
+  font-style: italic;
+  margin-top: 15px;
+  line-height: 1.6;
+}
+  </style>
+</head>
+<body>
+<!-- Dropdown Menu -->
+<div class="top-menu">
+    <div class="dots" id="menuTrigger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <a href="#" id="showAbout">About Me</a>
+      <a href="#" id="showContact">Contact Me</a>
+    </div>
+  </div>
+  
+  <!-- Intro Section -->
+    <div id="introSection" class="container mt-5 text-center">
+        <h6>Hi, I'm Aman</h6>
+        <p class="lead">A Software Engineer building thoughtful digital experiences</p>
+    </div>  
+  
+  <!-- About Me Section -->
+  <div id="aboutContent" class="container mt-5" style="display: none;">
+    <header class="mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-3 text-center">
+            {% if profile.profile_picture %}
+              <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="img-fluid">
+            {% else %}
+              <img src="{% static 'main/default-profile.png' %}" alt="Default Profile Picture" class="img-fluid">
+            {% endif %}
+          </div>
+          <div class="col-md-9">
+            <h1>{{ profile.name }}</h1>
+            <p>Bangalore, India |
+              <a href="tel:+919097972453" title="Phone"><i class="fas fa-phone"></i></a> |
+              <a href="mailto:ar.amanraj01@gmail.com" title="Email"><i class="fas fa-envelope"></i></a> |
+              <a href="https://www.linkedin.com/in/aman-raj-601534224/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a> |
+              <a href="https://leetcode.com/u/pmwRp1QmBw/" target="_blank" title="LeetCode">LeetCode</a> |
+              {% if profile.resume %}
+              <a href="{{ profile.resume.url }}" download>Resume</a>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </header>
+    <section class="mb-5">
+      <h2>Profile</h2>
+      <p>Detail-oriented software developer with a Master’s in Computer Applications and proven experience in developing web applications using Django. Proficient in Python, JavaScript, and SQL Server, with a strong focus on building efficient patient management systems. Expertise in user authentication, data validation, and dynamic form handling. Committed to delivering high-quality code, optimizing application performance, and applying best practices in software development. Strong problem-solving skills and a dedication to enhancing user experience.</p>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Technical Skills</h2>
+      <ul>
+          <li><strong>Programming Languages:</strong> Java, Python</li>
+          <li><strong>Web Technologies:</strong> HTML, CSS, JavaScript, jQuery, AJAX, Chart.js, Bootstrap</li>
+          <li><strong>Frameworks:</strong> Django, Django REST Framework</li>
+          <li><strong>Data Visualization:</strong> Chart.js</li>
+          <li><strong>Database Management:</strong> MySQL, MSSQL</li>
+          <li><strong>Email Services:</strong> SMTP</li>
+          <li><strong>Logging:</strong> Python logging module</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Soft Skills</h2>
+      <ul>
+          <li>Communication</li>
+          <li>Collaboration</li>
+          <li>Problem-Solving</li>
+          <li>Adaptability</li>
+          <li>Time Management</li>
+          <li>Continuous Learning</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Education</h2>
+      <ul>
+          <li><strong>Master of Computer Applications</strong> - Visvesvaraya Technological University, Bangalore (Jan 2023 – Oct 2024) | 80.00%</li>
+          <li><strong>Bachelor of Computer Applications</strong> - Indira Gandhi National Open University, Delhi (Dec 2018 – Jan 2022) | 66.43%</li>
+          <li><strong>Higher Secondary School (12th)</strong> - Bihar School Examination Board, Patna (Mar 2016 – Mar 2018)</li>
+          <li><strong>Matriculation (10th)</strong> - Bihar School Examination Board, Patna (Mar 2015 – Mar 2016)</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Certifications</h2>
+      <ul>
+          <li>MySQL Basics</li>
+          <li>Big Data Computing</li>
+          <li>Network Security</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Experience</h2>
+      <h5>IT Intern / Full Stack Developer - Cytecare Hospital (Dec 2024 – Present)</h5>
+      <ul>
+          <li>Developed web applications using Python (Django), HTML, CSS, JavaScript, and AJAX to enhance hospital operations.</li>
+          <li>Collaborated with cross-functional teams to design user-friendly interfaces.</li>
+          <li>Implemented AJAX for asynchronous data loading, improving application performance.</li>
+          <li>Conducted testing and debugging to ensure high-quality deliverables.</li>
+          <li>Participated in code reviews and contributed to best practices.</li>
+      </ul>
+      <h5>Java Developer Intern - Octanet Services Pvt Ltd</h5>
+      <ul>
+          <li>Developed and maintained Java applications using Spring and Hibernate frameworks.</li>
+          <li>Debugged and resolved code issues to enhance application performance.</li>
+          <li>Actively contributed to Agile sprints, including sprint planning and retrospectives.</li>
+          <li>Collaborated with team members to design and implement new features.</li>
+          <li>Conducted code reviews to maintain coding standards.</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Personal Projects</h2>
+      <h5>COVID-19 Vaccination Progress Analysis</h5>
+      <ul>
+          <li>Led a data analytics project using Python to analyze COVID-19 vaccination progress, guiding policy decisions and public health interventions.</li>
+          <li>Utilized Anaconda Jupyter Notebook & Python for data analysis.</li>
+          <li>Extracted valuable insights to inform policy-making.</li>
+          <li>Optimized resource allocation based on analytical findings.</li>
+          <li>Contributed to successful vaccination efforts & virus containment strategies.</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Languages</h2>
+      <ul>
+          <li>Hindi – Native/Bilingual Proficiency</li>
+          <li>English – Full Professional Proficiency</li>
+          <li>German – Beginner</li>
+      </ul>
+  </section>
+  
+  <section class="mb-5">
+      <h2>Interests</h2>
+      <ul>
+          <li>Ethical Hacking</li>
+          <li>Software Development</li>
+      </ul>
+  </section>
+    <!-- Other sections here (Profile, Skills, Education, etc.) -->
+    <!-- (Keep your original content here) -->
+  
+    <footer class="text-center mt-5">
+      <p>&copy; 2025 Aman Raj. All rights reserved.</p>
+    </footer>
+  </div>
+  
+  <!-- Contact Us Section -->
+  <div id="contactSection" class="container mt-5" style="display: none;">
+    <div class="row">
+      <div class="col-md-8">
+        <section class="mb-5">
+          <h2>Comments</h2>
+          <div class="comments-section">
+            {% for comment in comments %}
+              <div class="comment mb-4">
+                <p><strong>{{ comment.name }}</strong> ({{ comment.created_at }})</p>
+                <p>{{ comment.comment }}</p>
+              </div>
+            {% empty %}
+              <p>No comments yet. Be the first to leave a comment!</p>
+            {% endfor %}
+          </div>
+          <h3>Add a Comment</h3>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="comment">Comment</label>
+              <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </section>
+      </div>
+      <div class="col-md-4">
+        <section class="mb-5 contact-info">
+          <h2>Contact Info</h2>
+          <p><strong>Phone:</strong> <a href="tel:+919097972453">+91 9097972453</a></p>
+          <p><strong>Email:</strong> <a href="mailto:ar.amanraj01@gmail.com">ar.amanraj01@gmail.com</a></p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+    <!-- your body content remains unchanged up to the closing </body> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const menuTrigger = document.getElementById('menuTrigger');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const showAbout = document.getElementById('showAbout');
+  const showContact = document.getElementById('showContact');
+  const aboutContent = document.getElementById('aboutContent');
+  const contactSection = document.getElementById('contactSection');
+  const introSection = document.getElementById('introSection');
+
+  function hideAllSections() {
+    aboutContent.style.display = 'none';
+    contactSection.style.display = 'none';
+  }
+
+  function scrollToElement(el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  menuTrigger.addEventListener('click', () => {
+    dropdownMenu.classList.toggle('show');
+  });
+
+  showAbout.addEventListener('click', function (e) {
+    e.preventDefault();
+    hideAllSections();
+    dropdownMenu.classList.remove('show');
+    aboutContent.style.opacity = 0;
+    aboutContent.style.display = 'block';
+    setTimeout(() => {
+      aboutContent.style.transition = 'opacity 0.4s ease-in-out';
+      aboutContent.style.opacity = 1;
+    }, 50);
+    scrollToElement(aboutContent);
+  });
+
+  showContact.addEventListener('click', function (e) {
+    e.preventDefault();
+    hideAllSections();
+    dropdownMenu.classList.remove('show');
+    contactSection.style.opacity = 0;
+    contactSection.style.display = 'block';
+    setTimeout(() => {
+      contactSection.style.transition = 'opacity 0.4s ease-in-out';
+      contactSection.style.opacity = 1;
+    }, 50);
+    scrollToElement(contactSection);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!menuTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+      dropdownMenu.classList.remove('show');
+    }
+  });
+
+  // Show About section by default after 3 seconds
+  setTimeout(() => {
+    showAbout.click();
+  }, 2000);
+});
+</script>
+</body>
+</html>
